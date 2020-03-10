@@ -6,18 +6,68 @@ import math
 def add_circle( points, cx, cy, cz, r, step ):
     t = 0
     while (t < 1):
-        add_edge(points, int(r * math.cos(2*math.pi*t) + cx),int(r * math.sin(2*math.pi*t) + cy), int(r * math.cos(2*math.pi*(t+step)) + cx),int(r * math.sin(2*math.pi*(t+step)) + cy))
+        add_edge(points, int(r * math.cos(2*math.pi*t) + cx),int(r * math.sin(2*math.pi*t) + cy),0, int(r * math.cos(2*math.pi*(t+step)) + cx),int(r * math.sin(2*math.pi*(t+step)) + cy),0)
         t+=step
 
 def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
-    pass
+    if curve_type == 'bezier':
+        ax = (-1*x0)+(3*x1)-(3*x2)+x3
+        bx = (3*x0)-(6*x1)+(3*x2)
+        cx = (-3*x0)+(3*x1)
+        dx = x0
+        ay = (-1*y0)+(3*y1)-(3*y2)+y3
+        by = (3*y0)-(6*y1)+(3*y2)
+        cy = (-3*y0)+(3*y1)
+        dy = y0
+    else:
+        helper = [[2,-3,0,1],[-2,3,0,0],[1,-2,1,0],[1,-1,0,0]]
+        xVal = [[x0,x1,x2,x3]]
+        yVal = [[y0,y1,y2,y3]]
+        matrix_mult(helper, xVal)
+        matrix_mult(helper, yVal)
+        ax = xVal[0][0]
+        bx = xVal[0][1]
+        cx = xVal[0][2]
+        dx = xVal[0][3]
+        ay = yVal[0][0]
+        by = yVal[0][1]
+        cy = yVal[0][2]
+        dy = yVal[0][3]
+    t = 0
+    while t < 1:
+        xThis = (ax*t*t*t)+(bx*t*t)+(cx*t)+dx
+        yThis = (ay*t*t*t)+(by*t*t)+(cy*t)+dy
+        xNext = (ax*(t+step)*(t+step)*(t+step))+(bx*(t+step)*(t+step))+(cx*(t+step))+dx
+        yNext = (ay*(t+step)*(t+step)*(t+step))+(by*(t+step)*(t+step))+(cy*(t+step))+dy
+        add_edge(points, xThis, yThis, 0, xNext, yNext, 0)
+        t += step
+
 
 
 def bezier():
-    pass
+    ax = (-1*x0)+(3*x1)-(3*x2)+x3
+    bx = (3*x0)-(6*x1)+(3*x2)
+    cx = (-3*x0)+(3*x1)
+    dx = x0
+    ay = (-1*y0)+(3*y1)-(3*y2)+y3
+    by = (3*y0)-(6*y1)+(3*y2)
+    cy = (-3*y0)+(3*y1)
+    dy = y0
 
 def hermite(p0,p1,r0,r1):
-    pass
+    helper = [[2,-3,0,1],[-2,3,0,0],[1,-2,1,0],[1,-1,0,0]]
+    xVal = [[x0,x1,x2,x3]]
+    yVal = [[y0,y1,y2,y3]]
+    matrix_mult(helper, xVal)
+    matrix_mult(helper, yVal)
+    ax = xVal[0][0]
+    bx = xVal[0][1]
+    cx = xVal[0][2]
+    dx = xVal[0][3]
+    ay = yVal[0][0]
+    by = yVal[0][1]
+    cy = yVal[0][2]
+    dy = yVal[0][3]
 
 def draw_lines( matrix, screen, color ):
     if len(matrix) < 2:
