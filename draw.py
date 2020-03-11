@@ -10,29 +10,20 @@ def add_circle( points, cx, cy, cz, r, step ):
         t+=step
 
 def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
+    coeffs = list()
     if curve_type == 'bezier':
-        ax = (-1*x0)+(3*x1)-(3*x2)+x3
-        bx = (3*x0)-(6*x1)+(3*x2)
-        cx = (-3*x0)+(3*x1)
-        dx = x0
-        ay = (-1*y0)+(3*y1)-(3*y2)+y3
-        by = (3*y0)-(6*y1)+(3*y2)
-        cy = (-3*y0)+(3*y1)
-        dy = y0
+        coeffs = bezier( x0, y0, x1, y1, x2, y2, x3, y3)
     else:
-        helper = [[2,-3,0,1],[-2,3,0,0],[1,-2,1,0],[1,-1,0,0]]
-        xVal = [[x0,x1,x2,x3]]
-        yVal = [[y0,y1,y2,y3]]
-        matrix_mult(helper, xVal)
-        matrix_mult(helper, yVal)
-        ax = xVal[0][0]
-        bx = xVal[0][1]
-        cx = xVal[0][2]
-        dx = xVal[0][3]
-        ay = yVal[0][0]
-        by = yVal[0][1]
-        cy = yVal[0][2]
-        dy = yVal[0][3]
+        coeffs = hermite( x0, y0, x1, y1, x2, y2, x3, y3)
+
+    ax = coeffs[0]
+    bx = coeffs[1]
+    cx = coeffs[2]
+    dx = coeffs[3]
+    ay = coeffs[4]
+    by = coeffs[5]
+    cy = coeffs[6]
+    dy = coeffs[7]
     t = 0
     while t < 1:
         xThis = (ax*t*t*t)+(bx*t*t)+(cx*t)+dx
@@ -44,31 +35,27 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
 
 
 
-def bezier():
-    ax = (-1*x0)+(3*x1)-(3*x2)+x3
-    bx = (3*x0)-(6*x1)+(3*x2)
-    cx = (-3*x0)+(3*x1)
-    dx = x0
-    ay = (-1*y0)+(3*y1)-(3*y2)+y3
-    by = (3*y0)-(6*y1)+(3*y2)
-    cy = (-3*y0)+(3*y1)
-    dy = y0
+def bezier( x0, y0, x1, y1, x2, y2, x3, y3):
+    coeff = list()
+    coeff.append((-1*x0)+(3*x1)-(3*x2)+x3) #ax
+    coeff.append((3*x0)-(6*x1)+(3*x2)) #bx
+    coeff.append((-3*x0)+(3*x1)) #cx
+    coeff.append(x0) #dx
+    coeff.append((-1*y0)+(3*y1)-(3*y2)+y3) #ay
+    coeff.append((3*y0)-(6*y1)+(3*y2)) #by
+    coeff.append((-3*y0)+(3*y1)) #cy
+    coeff.append(y0) #dy
+    return coeff
 
-def hermite(p0,p1,r0,r1):
-    helper = [[2,-3,0,1],[-2,3,0,0],[1,-2,1,0],[1,-1,0,0]]
-    xVal = [[x0,x1,x2,x3]]
-    yVal = [[y0,y1,y2,y3]]
-    matrix_mult(helper, xVal)
-    matrix_mult(helper, yVal)
-    ax = xVal[0][0]
-    bx = xVal[0][1]
-    cx = xVal[0][2]
-    dx = xVal[0][3]
-    ay = yVal[0][0]
-    by = yVal[0][1]
-    cy = yVal[0][2]
-    dy = yVal[0][3]
-
+def hermite( x0, y0, x1, y1, x2, y2, x3, y3):
+    crabby = [[2,-3,0,1],[-2,3,0,0],[1,-2,1,0],[1,-1,0,0]]
+    x = [[x0,x1,x2,x3]]
+    y = [[y0,y1,y2,y3]]
+    matrix_mult(crabby, x)
+    matrix_mult(crabby, y)
+    #ax.bx.cx.dx.ay.by.cy.dx
+    return [x[0][0],x[0][1],x[0][2],x[0][3],y[0][0],y[0][1],y[0][2], y[0][3]]
+   
 def draw_lines( matrix, screen, color ):
     if len(matrix) < 2:
         print('Need at least 2 points to draw')
