@@ -21,18 +21,18 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
         dy = y0
     else:
         helper = [[2,-3,0,1],[-2,3,0,0],[1,-2,1,0],[1,-1,0,0]]
-        xVal = [[x0,x1,x2,x3]]
-        yVal = [[y0,y1,y2,y3]]
-        matrix_mult(helper, xVal)
-        matrix_mult(helper, yVal)
-        ax = xVal[0][0]
-        bx = xVal[0][1]
-        cx = xVal[0][2]
-        dx = xVal[0][3]
-        ay = yVal[0][0]
-        by = yVal[0][1]
-        cy = yVal[0][2]
-        dy = yVal[0][3]
+        x = [[x0,x1,x2,x3]]
+        y = [[y0,y1,y2,y3]]
+        matrix_mult(helper, x)
+        matrix_mult(helper, y)
+        ax = x[0][0]
+        bx = x[0][1]
+        cx = x[0][2]
+        dx = x[0][3]
+        ay = y[0][0]
+        by = y[0][1]
+        cy = y[0][2]
+        dy = y[0][3]
     t = 0
     while t < 1:
         xThis = (ax*t*t*t)+(bx*t*t)+(cx*t)+dx
